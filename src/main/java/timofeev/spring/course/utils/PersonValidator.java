@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import timofeev.library.projectFiles.DAO.PersonDAO;
-import timofeev.library.projectFiles.models.Person;
+import timofeev.spring.course.DAO.PersonDAO;
+import timofeev.spring.course.models.Person;
 
 @Component
 public class PersonValidator implements Validator {
