@@ -53,10 +53,10 @@ public class BookDAO {
         jdbcTemplate.update("UPDATE book SET person_id=? where book_id=?", personId, bookId);
     }
 
-    public int getPersonId(int bookId){
-        return jdbcTemplate.query("SELECT * FROM BOOK WHERE book_id=" + bookId,
-                new BookMapper()).stream().findAny().orElse(null).getOwnerId();
-    }
+//    public int getPersonId(int bookId){
+//        return jdbcTemplate.query("SELECT * FROM BOOK WHERE book_id=" + bookId,
+//                new BookMapper()).stream().findAny().orElse(null).getOwnerId();
+//    }
 
     public Optional<Person> getBookOwner(int id) {
         // Выбираем все колонки таблицы Person из объединенной таблицы
