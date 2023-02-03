@@ -3,6 +3,7 @@ package timofeev.spring.course.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import timofeev.spring.course.models.Book;
@@ -29,6 +30,10 @@ public class BookService {
 
     public List<Book> index(){
         return bookRepository.findAll();
+    }
+
+    public List<Book> indexSortByYear(){
+        return bookRepository.findAllByOrderByYearOfCreateAsc();
     }
 
     public Book show(int id){ // В вызове в контроллере проверять на findAny
@@ -82,5 +87,13 @@ public class BookService {
     @Transactional
     public List<Book> getPage(int page, int itemsPerPage){
         return bookRepository.findAll(PageRequest.of(page, itemsPerPage)).getContent();
+    }
+
+    public Book getBookByName(String name){
+        return bookRepository.findByName(name).orElse(null);
+    }
+
+    public Book getBookStartingWithName(String name){
+        return bookRepository.findByNameStartingWith(name).get(0);
     }
 }

@@ -7,11 +7,16 @@ import timofeev.spring.course.models.Book;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
     public List<Book> findBookByOwnerId(int id);
 
-    public List<Book> findByName(String name);
+    public Optional<Book> findByName(String name);
+
+    public List<Book> findAllByOrderByYearOfCreateAsc();
+
+    public List<Book> findByNameStartingWith(String start);
 }

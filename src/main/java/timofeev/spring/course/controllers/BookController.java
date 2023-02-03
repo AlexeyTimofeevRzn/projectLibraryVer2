@@ -5,42 +5,46 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import timofeev.spring.course.DAO.BookDAO;
-import timofeev.spring.course.DAO.PersonDAO;
 import timofeev.spring.course.models.Book;
 import timofeev.spring.course.models.Person;
 import timofeev.spring.course.services.BookService;
 import timofeev.spring.course.services.PeopleService;
+import timofeev.spring.course.utils.BookValidator;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
 public class BookController {
 
-//    private final BookDAO bookDAO;
-//    private final PersonDAO personDAO;
-
     private final PeopleService peopleService;
 
     private final BookService bookService;
 
+    private final BookValidator bookValidator;
+
     @Autowired
-    public BookController(PeopleService peopleService, BookService bookService) {
+    public BookController(PeopleService peopleService, BookService bookService, BookValidator bookValidator) {
         this.peopleService = peopleService;
         this.bookService = bookService;
 //        this.bookDAO = bookDAO;
 //        this.personDAO = personDAO;
+        this.bookValidator = bookValidator;
     }
 
     @GetMapping()
-    public String index(Model model){
-        model.addAttribute("books", bookService.index());
+    public String index(@RequestParam(value = "sort",
+            required = false,
+            defaultValue = "false") boolean isSort, Model model){
+        if(isSort){
+            model.addAttribute("books", bookService.indexSortByYear());
+        }
+        else{
+            model.addAttribute("books", bookService.index());
+        }
 
         return "books/index";
     }
-
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person){
@@ -74,6 +78,9 @@ public class BookController {
 
     @PostMapping
     public String create(@ModelAttribute("thisBook") @Valid Book book, BindingResult bindingResult){
+
+        bookValidator.validate(book, bindingResult);
+
         if(bindingResult.hasErrors()){
             return "books/new";
         }
@@ -116,19 +123,36 @@ public class BookController {
         return "redirect:/books/" + id;
     }
 
-    @GetMapping("/page/{page}")
-    public String getPage(@PathVariable("page") int page, Model model){
-        model.addAttribute("books", bookService.getPage(page, 3));
-        model.addAttribute("page", page);
+//    @GetMapping("/page/{page}")
+//    public String getPage(@PathVariable("page") int page, Model model){
+//        model.addAttribute("books", bookService.getPage(page, 3));
+//        model.addAttribute("page", page);
+//
+//        return "/books/showPage";
+//    }
+//
+//    @GetMapping("/page/directTo/{page}")
+//    public String getNextPage(@PathVariable("page") int page, Model model){
+//        model.addAttribute("books", bookService.getPage(page + 1, 3));
+//        model.addAttribute("page", page + 1);
+//
+//        return "/books/showPage";
+//    }
 
-        return "/books/showPage";
+    @GetMapping("/search")
+    public String getSearchPage(Model model){
+        model.addAttribute("book", new Book());
+
+        return "/books/searchPage";
     }
 
-    @GetMapping("/page/directTo/{page}")
-    public String getNextPage(@PathVariable("page") int page, Model model){
-        model.addAttribute("books", bookService.getPage(page + 1, 3));
-        model.addAttribute("page", page + 1);
+    @GetMapping("/search/result")
+    public String getFoundBook(@ModelAttribute("book") Book book, Model model){
 
-        return "/books/showPage";
+        Book resultBook = bookService.getBookStartingWithName(book.getName());
+
+        model.addAttribute("book", resultBook);
+
+        return "books/showResult";
     }
 }

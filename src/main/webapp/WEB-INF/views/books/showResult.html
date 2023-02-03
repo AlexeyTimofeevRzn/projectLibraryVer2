@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Книга</title>
+</head>
+<body>
+
+<p th:text="${book.getName() + ', ' + book.getAuthor()}">VALUE</p>
+
+<hr/>
+
+<div th:if="${owner}">
+  <span>Book now on: </span> <span th:text="${owner.getFIO()}">Person Name</span>
+</div>
+
+
+</body>
+</html>

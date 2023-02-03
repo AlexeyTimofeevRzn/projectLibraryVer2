@@ -10,6 +10,7 @@ import timofeev.spring.course.DAO.PersonDAO;
 import timofeev.spring.course.models.Person;
 import timofeev.spring.course.services.BookService;
 import timofeev.spring.course.services.PeopleService;
+import timofeev.spring.course.utils.PersonValidator;
 
 import javax.validation.Valid;
 
@@ -23,12 +24,15 @@ public class PeopleController {
 
     private final BookService bookService;
 
+    private final PersonValidator personValidator;
+
     @Autowired
-    public PeopleController(PersonDAO personDAO, BookDAO bookDAO, PeopleService peopleService, BookService bookService){
+    public PeopleController(PersonDAO personDAO, BookDAO bookDAO, PeopleService peopleService, BookService bookService, PersonValidator personValidator){
         this.personDAO = personDAO;
         //this.bookDAO = bookDAO;
         this.peopleService = peopleService;
         this.bookService = bookService;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()

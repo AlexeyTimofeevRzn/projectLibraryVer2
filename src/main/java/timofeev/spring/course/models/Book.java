@@ -1,5 +1,6 @@
 package timofeev.spring.course.models;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
